@@ -7,6 +7,7 @@ $cpp_output = true
 $MAX_ARGS = 20
 $DEFAULT_ARG_HISTORY = 50
 $MAX_CALL_HISTORY = 50
+$WRAP_PREFIX = "__wrap"
 
 def include_dependencies
   putd "#include <stdarg.h>"
@@ -35,6 +36,7 @@ def output_internal_helper_macros
   define_return_sequence_helper
   define_custom_fake_sequence_helper
   define_reset_fake_macro
+  define_reset_wrap_to_real_fake_macro
   define_declare_arg_helper
   define_declare_all_func_common_helper
   define_save_arg_helper
@@ -47,6 +49,8 @@ def output_internal_helper_macros
   define_return_fake_result_helper
   define_extern_c_helper
   define_reset_fake_helper
+  define_reset_fake_to_real_helper
+  define_reset_wrap_fake_to_real_helper
   
   putd "/* -- END INTERNAL HELPER MACROS -- */"
   putd ""
@@ -62,6 +66,15 @@ def define_custom_fake_sequence_helper
   putd "#define SET_CUSTOM_FAKE_SEQ(FUNCNAME, ARRAY_POINTER, ARRAY_LEN) \\"
   putd "                            FUNCNAME##_fake.custom_fake_seq = ARRAY_POINTER; \\"
   putd "                            FUNCNAME##_fake.custom_fake_seq_len = ARRAY_LEN;"
+end
+
+def define_reset_wrap_to_real_fake_macro
+  putd ""
+  putd "/* Defining a function to reset custom_fake_to__real_function */"
+  putd "#define RESET_WRAP_FAKE_TO_REAL(FUNCNAME) { \\"
+  putd "    FUNCNAME##_wrap_reset_to_real(); \\"
+  putd "} \\"
+  putd ""
 end
 
 def define_reset_fake_macro
@@ -157,6 +170,18 @@ def define_extern_c_helper
   putd "#endif  /* cpp/ansi c */"
 end
 
+def define_reset_fake_to_real_helper
+  putd ""
+  putd "#define DEFINE_RESET_FUNCTION_TO_REAL(FUNCNAME) \\"
+  pushd
+    putd "void FUNCNAME##_reset_to_real(){ \\"
+    pushd
+      set_custom_fake_to_real_function
+    popd
+  putd "}"
+  popd
+end
+
 def define_reset_fake_helper
   putd ""
   putd "#define DEFINE_RESET_FUNCTION(FUNCNAME) \\"
@@ -164,6 +189,23 @@ def define_reset_fake_helper
   putd "        memset(&FUNCNAME##_fake, 0, sizeof(FUNCNAME##_fake)); \\"
   putd "        FUNCNAME##_fake.arg_history_len = FFF_ARG_HISTORY_LEN;\\"
   putd "    }"
+end
+
+def set_custom_fake_to_real_function
+  putd "#{$WRAP_PREFIX}_##FUNCNAME##_fake.custom_fake = __real_##FUNCNAME ; \\"
+end
+
+def define_reset_wrap_fake_to_real_helper
+  putd ""
+  putd "#define DEFINE_RESET_WRAP_TO_REAL_FUNCTION(FUNCNAME) \\"
+  pushd
+    putd "void FUNCNAME##_wrap_reset_to_real(){ \\"
+    pushd
+      putd "#{$WRAP_PREFIX}_##FUNCNAME##_reset();\\"
+      set_custom_fake_to_real_function
+    popd
+    putd "}"
+  popd
 end
 # ------  End Helper macros ------ #
 
@@ -187,7 +229,9 @@ def output_macro(arg_count, has_varargs, is_value_function)
   vararg_name = has_varargs ? "_VARARG" : ""
   fake_macro_name = is_value_function ? "FAKE_VALUE_FUNC#{arg_count}#{vararg_name}" : "FAKE_VOID_FUNC#{arg_count}#{vararg_name}"
   declare_macro_name = "DECLARE_#{fake_macro_name}"
+  declare_wrap_macro_name = "DECLARE_WRAP_#{fake_macro_name}"
   define_macro_name = "DEFINE_#{fake_macro_name}"
+  define_wrap_macro_name = "DEFINE_WRAP_#{fake_macro_name}"
   saved_arg_count = arg_count - (has_varargs ? 1 : 0)
   return_type = is_value_function ? "RETURN_TYPE" : ""
 
@@ -198,6 +242,20 @@ def output_macro(arg_count, has_varargs, is_value_function)
       output_variables(saved_arg_count, has_varargs, is_value_function)
     }
   popd
+
+  # vararg functions are not wrappable
+  if !has_varargs
+    putd ""
+    output_macro_header(declare_wrap_macro_name, saved_arg_count, has_varargs, return_type)
+    pushd
+      extern_c {
+        putd real_function_signature(saved_arg_count, has_varargs, is_value_function) + ";\\"
+        arg_type_list = (saved_arg_count > 0) ? ", #{arg_type_list(saved_arg_count)}" : ""
+        putd "#{declare_macro_name}(#{fff_macro_parameter(saved_arg_count, is_value_function)}); \\"
+        putd "void FUNCNAME##_wrap_reset_to_real(); \\"
+      }
+    popd
+  end
   
   putd ""
   output_macro_header(define_macro_name, saved_arg_count, has_varargs, return_type)
@@ -212,7 +270,20 @@ def output_macro(arg_count, has_varargs, is_value_function)
       putd "DEFINE_RESET_FUNCTION(FUNCNAME) \\"
     }
   popd
-  
+
+  # vararg functions are not wrappable
+  if !has_varargs
+    putd ""
+    output_macro_header(define_wrap_macro_name, saved_arg_count, has_varargs, return_type)
+    pushd
+      extern_c {
+        arg_type_list = (saved_arg_count > 0) ? ", #{arg_type_list(saved_arg_count)}" : ""
+        putd "#{define_macro_name}(#{fff_macro_parameter(saved_arg_count, is_value_function)}); \\"
+        putd "DEFINE_RESET_WRAP_TO_REAL_FUNCTION(FUNCNAME); \\"
+      }
+    popd
+  end
+
   putd ""
   
   output_macro_header(fake_macro_name, saved_arg_count, has_varargs, return_type)
@@ -269,6 +340,13 @@ def output_variables(arg_count, has_varargs, is_value_function)
   putd "void FUNCNAME##_reset(); \\"
 end
 
+#example: ARG0_TYPE, ARG1_TYPE
+def arg_type_list(args_count)
+  arguments = []
+  args_count.times { |i| arguments << "ARG#{i}_TYPE" }
+  arguments.join(", ")
+end
+
 #example: ARG0_TYPE arg0, ARG1_TYPE arg1
 def arg_val_list(args_count)
   arguments = []
@@ -304,6 +382,19 @@ def function_signature(arg_count, has_varargs, is_value_function)
   return_type = is_value_function ? "RETURN_TYPE" : "void"
   varargs = has_varargs ? ", ..." : ""
   "#{return_type} FUNCNAME(#{arg_val_list(arg_count)}#{varargs})"
+end
+
+def fff_macro_parameter(arg_count, is_value_function)
+  return_type = is_value_function ? "RETURN_TYPE, " : ""
+  arg_type_list = arg_count > 0 ? ", #{arg_type_list(arg_count)}" : ""
+  "#{return_type}#{$WRAP_PREFIX}_##FUNCNAME#{arg_type_list}"
+end
+
+# example: RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0)
+def real_function_signature(arg_count, has_varargs, is_value_function)
+  return_type = is_value_function ? "RETURN_TYPE" : "void"
+  varargs = has_varargs ? ", ..." : ""
+  "#{return_type} __real_##FUNCNAME(#{arg_val_list(arg_count)}#{varargs})"
 end
 
 def output_function_body(arg_count, has_varargs, is_value_function)
