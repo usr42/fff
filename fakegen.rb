@@ -263,6 +263,7 @@ def output_macro(arg_count, has_varargs, is_value_function)
         arg_type_list = (saved_arg_count > 0) ? ", #{arg_type_list(saved_arg_count)}" : ""
         putd "#{define_macro_name}(#{fff_macro_parameter(saved_arg_count, is_value_function)}); \\"
         putd "DEFINE_RESET_WRAP_TO_REAL_FUNCTION(FUNCNAME); \\"
+        putd "#{$WRAP_PREFIX}_##FUNCNAME##_Fake #{$WRAP_PREFIX}_##FUNCNAME##_fake = #{output_variables_set_custom_fake("__real_##FUNCNAME", saved_arg_count, is_value_function)};"
       }
     popd
   end
@@ -321,6 +322,25 @@ def output_variables(arg_count, has_varargs, is_value_function)
   }
   putd "extern FUNCNAME##_Fake FUNCNAME##_fake;\\"
   putd "void FUNCNAME##_reset(); \\"
+end
+
+def output_variables_set_custom_fake(custom_fake, arg_count, is_value_function)
+  ret = "{"
+  # DECLARE_ARG
+  arg_count.times {
+    ret << "0, {0}, "
+  }
+  # DECLARE_ALL_FUNC_COMMON
+  ret << "0, 0, 0, "
+  # DECLARE_VALUE_FUNCTION_VARIABLES
+  ret << "0, 0, 0, 0, " unless not is_value_function
+  # DECLARE_CUSTOM_FAKE_SEQ_VARIABLES
+  ret << "0, 0, "
+  # custom_fake
+  ret << "#{custom_fake}, "
+  # custem_fake_seq
+  ret << "0"
+  ret << "};"
 end
 
 #example: ARG0_TYPE, ARG1_TYPE
