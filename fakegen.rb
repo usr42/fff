@@ -49,7 +49,6 @@ def output_internal_helper_macros
   define_return_fake_result_helper
   define_extern_c_helper
   define_reset_fake_helper
-  define_reset_fake_to_real_helper
   define_reset_wrap_fake_to_real_helper
   
   putd "/* -- END INTERNAL HELPER MACROS -- */"
@@ -170,18 +169,6 @@ def define_extern_c_helper
   putd "#endif  /* cpp/ansi c */"
 end
 
-def define_reset_fake_to_real_helper
-  putd ""
-  putd "#define DEFINE_RESET_FUNCTION_TO_REAL(FUNCNAME) \\"
-  pushd
-    putd "void FUNCNAME##_reset_to_real(){ \\"
-    pushd
-      set_custom_fake_to_real_function
-    popd
-  putd "}"
-  popd
-end
-
 def define_reset_fake_helper
   putd ""
   putd "#define DEFINE_RESET_FUNCTION(FUNCNAME) \\"
@@ -191,10 +178,6 @@ def define_reset_fake_helper
   putd "    }"
 end
 
-def set_custom_fake_to_real_function
-  putd "#{$WRAP_PREFIX}_##FUNCNAME##_fake.custom_fake = __real_##FUNCNAME ; \\"
-end
-
 def define_reset_wrap_fake_to_real_helper
   putd ""
   putd "#define DEFINE_RESET_WRAP_TO_REAL_FUNCTION(FUNCNAME) \\"
@@ -202,7 +185,7 @@ def define_reset_wrap_fake_to_real_helper
     putd "void FUNCNAME##_wrap_reset_to_real(){ \\"
     pushd
       putd "#{$WRAP_PREFIX}_##FUNCNAME##_reset();\\"
-      set_custom_fake_to_real_function
+      putd "#{$WRAP_PREFIX}_##FUNCNAME##_fake.custom_fake = __real_##FUNCNAME ; \\"
     popd
     putd "}"
   popd
