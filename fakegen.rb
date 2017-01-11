@@ -211,10 +211,11 @@ def output_macro(arg_count, has_varargs, is_value_function)
 
   vararg_name = has_varargs ? "_VARARG" : ""
   fake_macro_name = is_value_function ? "FAKE_VALUE_FUNC#{arg_count}#{vararg_name}" : "FAKE_VOID_FUNC#{arg_count}#{vararg_name}"
+  wrap_fake_macro_name = "WRAP_#{fake_macro_name}"
   declare_macro_name = "DECLARE_#{fake_macro_name}"
-  declare_wrap_macro_name = "DECLARE_WRAP_#{fake_macro_name}"
+  declare_wrap_macro_name = "DECLARE_#{wrap_fake_macro_name}"
   define_macro_name = "DEFINE_#{fake_macro_name}"
-  define_wrap_macro_name = "DEFINE_WRAP_#{fake_macro_name}"
+  define_wrap_macro_name = "DEFINE_#{wrap_fake_macro_name}"
   saved_arg_count = arg_count - (has_varargs ? 1 : 0)
   return_type = is_value_function ? "RETURN_TYPE" : ""
 
@@ -274,6 +275,13 @@ def output_macro(arg_count, has_varargs, is_value_function)
   pushd
     putd macro_signature_for(declare_macro_name, saved_arg_count, has_varargs, return_type)
     putd macro_signature_for(define_macro_name, saved_arg_count, has_varargs, return_type)
+    putd ""
+  popd
+
+  output_macro_header(wrap_fake_macro_name, saved_arg_count, has_varargs, return_type)
+  pushd
+    putd macro_signature_for(declare_wrap_macro_name, saved_arg_count, has_varargs, return_type)
+    putd macro_signature_for(define_wrap_macro_name, saved_arg_count, has_varargs, return_type)
     putd ""
   popd
 end
