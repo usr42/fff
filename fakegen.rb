@@ -567,6 +567,25 @@ def output_macro_counting_shortcuts
     FAKE_VOID_FUNC ## N(__VA_ARGS__)
 
 
+#define WRAP_FAKE_VALUE_FUNC(...) \
+    WRAP_FUNC_VALUE_(PP_NARG_MINUS2(__VA_ARGS__), __VA_ARGS__)
+
+#define WRAP_FUNC_VALUE_(N,...) \
+    WRAP_FUNC_VALUE_N(N,__VA_ARGS__)
+
+#define WRAP_FUNC_VALUE_N(N,...) \
+    WRAP_FAKE_VALUE_FUNC ## N(__VA_ARGS__)
+
+
+#define WRAP_FAKE_VOID_FUNC(...) \
+    WRAP_FUNC_VOID_(PP_NARG_MINUS1(__VA_ARGS__), __VA_ARGS__)
+
+#define WRAP_FUNC_VOID_(N,...) \
+    WRAP_FUNC_VOID_N(N,__VA_ARGS__)
+
+#define WRAP_FUNC_VOID_N(N,...) \
+    WRAP_FAKE_VOID_FUNC ## N(__VA_ARGS__)
+
 #define FAKE_VALUE_FUNC_VARARG(...) \
     FUNC_VALUE_VARARG_(PP_NARG_MINUS2(__VA_ARGS__), __VA_ARGS__)
 
@@ -604,10 +623,30 @@ def output_macro_counting_shortcuts
     DEC_FUNC_VOID_(PP_NARG_MINUS1(__VA_ARGS__), __VA_ARGS__)
 
 #define DEC_FUNC_VOID_(N,...) \
-    DEC_FUNC_VOID_N(N, __VA_ARGS__)    
+    DEC_FUNC_VOID_N(N, __VA_ARGS__)
 
 #define DEC_FUNC_VOID_N(N,...) \
     DECLARE_FAKE_VOID_FUNC ## N(__VA_ARGS__)
+
+
+#define DECLARE_WRAP_FAKE_VALUE_FUNC(...) \
+    DEC_WRAP_FUNC_VALUE_(PP_NARG_MINUS2(__VA_ARGS__), __VA_ARGS__)
+
+#define DEC_WRAP_FUNC_VALUE_(N,...)  \
+    DEC_WRAP_FUNC_VALUE_N(N,__VA_ARGS__)
+
+#define DEC_WRAP_FUNC_VALUE_N(N,...) \
+    DECLARE_WRAP_FAKE_VALUE_FUNC ## N(__VA_ARGS__)
+
+
+#define DECLARE_WRAP_FAKE_VOID_FUNC(...) \
+    DEC_WRAP_FUNC_VOID_(PP_NARG_MINUS1(__VA_ARGS__), __VA_ARGS__)
+
+#define DEC_WRAP_FUNC_VOID_(N,...) \
+    DEC_WRAP_FUNC_VOID_N(N, __VA_ARGS__)
+
+#define DEC_WRAP_FUNC_VOID_N(N,...) \
+    DECLARE_WRAP_FAKE_VOID_FUNC ## N(__VA_ARGS__)
 
 
 #define DECLARE_FAKE_VALUE_FUNC_VARARG(...) \
@@ -647,10 +686,30 @@ def output_macro_counting_shortcuts
     DEF_FUNC_VOID_(PP_NARG_MINUS1(__VA_ARGS__), __VA_ARGS__)
 
 #define DEF_FUNC_VOID_(N,...) \
-    DEF_FUNC_VOID_N(N,__VA_ARGS__) 
+    DEF_FUNC_VOID_N(N,__VA_ARGS__)
 
 #define DEF_FUNC_VOID_N(N,...) \
-    DEFINE_FAKE_VOID_FUNC ## N(__VA_ARGS__) 
+    DEFINE_FAKE_VOID_FUNC ## N(__VA_ARGS__)
+
+
+#define DEFINE_WRAP_FAKE_VALUE_FUNC(...) \
+    DEF_WRAP_FUNC_VALUE_(PP_NARG_MINUS2(__VA_ARGS__), __VA_ARGS__)
+
+#define DEF_WRAP_FUNC_VALUE_(N,...)  \
+    DEF_WRAP_FUNC_VALUE_N(N,__VA_ARGS__)
+
+#define DEF_WRAP_FUNC_VALUE_N(N,...) \
+    DEFINE_WRAP_FAKE_VALUE_FUNC ## N(__VA_ARGS__)
+
+
+#define DEFINE_WRAP_FAKE_VOID_FUNC(...) \
+    DEF_WRAP_FUNC_VOID_(PP_NARG_MINUS1(__VA_ARGS__), __VA_ARGS__)
+
+#define DEF_WRAP_FUNC_VOID_(N,...) \
+    DEF_WRAP_FUNC_VOID_N(N,__VA_ARGS__)
+
+#define DEF_WRAP_FUNC_VOID_N(N,...) \
+    DEFINE_WRAP_FAKE_VOID_FUNC ## N(__VA_ARGS__)
 
 
 #define DEFINE_FAKE_VALUE_FUNC_VARARG(...) \
