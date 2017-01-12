@@ -4,7 +4,8 @@ BUILD_DIR = ../build
 FFF_TEST_CPP_OBJS += \
 $(BUILD_DIR)/fff_test_cpp.o \
 $(BUILD_DIR)/gtest-all.o \
-$(BUILD_DIR)/gtest-main.o
+$(BUILD_DIR)/gtest-main.o \
+$(BUILD_DIR)/real_functions.o
 
 FFF_TEST_GLOBAL_CPP_OBJS += \
 $(BUILD_DIR)/fff_test_global_cpp.o \
@@ -12,7 +13,9 @@ $(BUILD_DIR)/global_fakes.o \
 $(BUILD_DIR)/gtest-all.o \
 $(BUILD_DIR)/gtest-main.o
 
-FFF_TEST_C_OBJS = $(BUILD_DIR)/fff_test_c.o
+FFF_TEST_C_OBJS += \
+$(BUILD_DIR)/fff_test_c.o \
+$(BUILD_DIR)/real_functions.o
 
 FFF_TEST_GLOBAL_C_OBJS += \
 $(BUILD_DIR)/global_fakes.o \
@@ -23,6 +26,8 @@ FFF_TEST_C_TARGET = $(BUILD_DIR)/fff_test_c
 FFF_TEST_GLOBAL_C_TARGET = $(BUILD_DIR)/fff_test_glob_c
 FFF_TEST_GLOBAL_CPP_TARGET = $(BUILD_DIR)/fff_test_glob_cpp
 
+WRAP_LDFLAGS += $(shell grep -r WRAP_FAKE_VALUE_FUNC ./ | grep -v "fff\.h" | sed -rn 's/[^,]*,\W*(\w*).*/-Wl,--wrap=\1/p' | sort -u)
+WRAP_LDFLAGS += $(shell grep -r WRAP_FAKE_VOID_FUNC ./ | grep -v "fff\.h" | sed -rn 's/.*WRAP_FAKE_VOID_FUNC\w*\W*(\w*).*/-Wl,--wrap=\1/p' | sort -u)
 LIBS := -lpthread
 # All Target
 all: $(FFF_TEST_CPP_TARGET) $(FFF_TEST_C_TARGET) $(FFF_TEST_GLOBAL_C_TARGET) $(FFF_TEST_GLOBAL_CPP_TARGET)
@@ -48,14 +53,14 @@ $(BUILD_DIR)/%.o: %.c
 $(FFF_TEST_CPP_TARGET): $(FFF_TEST_CPP_OBJS) 
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -o "$(FFF_TEST_CPP_TARGET)" $(FFF_TEST_CPP_OBJS) $(LIBS)
+	g++ -o "$(FFF_TEST_CPP_TARGET)" $(FFF_TEST_CPP_OBJS) $(LIBS) $(WRAP_LDFLAGS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 $(FFF_TEST_C_TARGET): $(FFF_TEST_C_OBJS) 
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C Linker'
-	gcc  -o "$(FFF_TEST_C_TARGET)" $(FFF_TEST_C_OBJS) $(LIBS)
+	gcc  -o "$(FFF_TEST_C_TARGET)" $(FFF_TEST_C_OBJS) $(LIBS) $(WRAP_LDFLAGS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

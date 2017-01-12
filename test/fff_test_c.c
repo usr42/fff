@@ -8,6 +8,7 @@
 
 #include "../fff.h"
 #include "c_test_framework.h"
+#include "real_functions.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -21,7 +22,6 @@ struct MyStruct {
     int y;
 };
 
-
 FAKE_VOID_FUNC(voidfunc1, int);
 FAKE_VOID_FUNC(voidfunc2, char, char);
 FAKE_VOID_FUNC(voidfunc1outparam, char *);
@@ -32,6 +32,8 @@ FAKE_VOID_FUNC_VARARG(voidfunc3var, char *, int, ...);
 FAKE_VALUE_FUNC_VARARG(int, valuefunc3var, char *, int, ...);
 FAKE_VALUE_FUNC(int, strlcpy3, char* const, const char* const, const size_t);
 FAKE_VOID_FUNC(voidfunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
+
+WRAP_FAKE_VOID_FUNC(wrapvoidfunc0);
 
 void setup()
 {
@@ -44,6 +46,10 @@ void setup()
     RESET_FAKE(voidfunc3var);
     RESET_FAKE(valuefunc3var);
     RESET_FAKE(strlcpy3);
+
+    RESET_WRAP_FAKE(wrapvoidfunc0);
+    wrapvoidfunc0_called = 0;
+
     FFF_RESET_HISTORY();
 }
 
@@ -57,6 +63,29 @@ TEST_F(FFFTestSuite, default_constants_can_be_overridden)
     ASSERT_EQ(OVERRIDE_ARG_HIST_LEN, voidfunc2_fake.arg_history_len);
 }
 
+
+TEST_F(FFFWrapTestSuite, custom_fake_is_set_to_real_function)
+{
+    ASSERT_EQ(__real_wrapvoidfunc0, __wrap_wrapvoidfunc0_fake.custom_fake);
+}
+
+TEST_F(FFFWrapTestSuite, by_default_real_function_is_called)
+{
+    wrapvoidfunc0();
+
+    ASSERT_EQ(1, wrapvoidfunc0_called);
+}
+
+TEST_F(FFFWrapTestSuite, real_function_is_not_called_if_custom_fake_is_set_to_null)
+{
+    __wrap_wrapvoidfunc0_fake.custom_fake = NULL;
+
+    wrapvoidfunc0();
+
+    ASSERT_EQ(0, wrapvoidfunc0_called);
+}
+
+
 DEFINE_FFF_GLOBALS;
 int main()
 {
@@ -67,6 +96,10 @@ int main()
     fflush(0);
 
     /* Run tests */
+    RUN_TEST(FFFWrapTestSuite, custom_fake_is_set_to_real_function);
+    RUN_TEST(FFFWrapTestSuite, by_default_real_function_is_called);
+    RUN_TEST(FFFWrapTestSuite, real_function_is_not_called_if_custom_fake_is_set_to_null);
+
     RUN_TEST(FFFTestSuite, when_void_func_never_called_then_callcount_is_zero);
     RUN_TEST(FFFTestSuite, when_void_func_called_once_then_callcount_is_one);
     RUN_TEST(FFFTestSuite, when_void_func_called_once_and_reset_then_callcount_is_zero);
