@@ -1,5 +1,6 @@
 
 #include "global_fakes.h"
+#include "real_functions.h"
 #include "c_test_framework.h"
 
 
@@ -18,11 +19,15 @@ void setup()
     RESET_FAKE(valuefunc3var);
     RESET_FAKE(strlcpy3);
 
+    RESET_WRAP_FAKE(wrapvoidfunc0);
+    wrapvoidfunc0_called = 0;
+
     FFF_RESET_HISTORY();
 }
 
 
 #include "test_cases.include"
+#include "wrap_test_cases_include.c"
 
 
 int main()
@@ -34,6 +39,10 @@ int main()
     fflush(0);
 
     /* Run tests */
+    RUN_TEST(FFFWrapTestSuite, custom_fake_is_set_to_real_function);
+    RUN_TEST(FFFWrapTestSuite, by_default_real_function_is_called);
+    RUN_TEST(FFFWrapTestSuite, real_function_is_not_called_if_custom_fake_is_set_to_null);
+
     RUN_TEST(FFFTestSuite, when_void_func_never_called_then_callcount_is_zero);
     RUN_TEST(FFFTestSuite, when_void_func_called_once_then_callcount_is_one);
     RUN_TEST(FFFTestSuite, when_void_func_called_once_and_reset_then_callcount_is_zero);

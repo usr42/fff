@@ -22,6 +22,7 @@ struct MyStruct {
     int y;
 };
 
+
 FAKE_VOID_FUNC(voidfunc1, int);
 FAKE_VOID_FUNC(voidfunc2, char, char);
 FAKE_VOID_FUNC(voidfunc1outparam, char *);
@@ -55,6 +56,7 @@ void setup()
 
 
 #include "test_cases.include"
+#include "wrap_test_cases_include.c"
 
 TEST_F(FFFTestSuite, default_constants_can_be_overridden)
 {
@@ -62,29 +64,6 @@ TEST_F(FFFTestSuite, default_constants_can_be_overridden)
     ASSERT_EQ(OVERRIDE_CALL_HIST_LEN, sizeCallHistory);
     ASSERT_EQ(OVERRIDE_ARG_HIST_LEN, voidfunc2_fake.arg_history_len);
 }
-
-
-TEST_F(FFFWrapTestSuite, custom_fake_is_set_to_real_function)
-{
-    ASSERT_EQ(__real_wrapvoidfunc0, __wrap_wrapvoidfunc0_fake.custom_fake);
-}
-
-TEST_F(FFFWrapTestSuite, by_default_real_function_is_called)
-{
-    wrapvoidfunc0();
-
-    ASSERT_EQ(1, wrapvoidfunc0_called);
-}
-
-TEST_F(FFFWrapTestSuite, real_function_is_not_called_if_custom_fake_is_set_to_null)
-{
-    __wrap_wrapvoidfunc0_fake.custom_fake = NULL;
-
-    wrapvoidfunc0();
-
-    ASSERT_EQ(0, wrapvoidfunc0_called);
-}
-
 
 DEFINE_FFF_GLOBALS;
 int main()
