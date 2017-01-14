@@ -566,6 +566,8 @@ def output_macro_counting_shortcuts
 
 #{counting_macro_instance(:VALUE)}
 #{counting_macro_instance(:VOID)}
+#{counting_macro_instance(:VALUE, :non_vararg, "WRAP_")}
+#{counting_macro_instance(:VOID, :non_vararg, "WRAP_")}
 #{counting_macro_instance(:VALUE, :vararg)}
 #{counting_macro_instance(:VOID, :vararg)}
 
@@ -573,6 +575,8 @@ def output_macro_counting_shortcuts
 
 #{counting_macro_instance(:VALUE, :non_vararg, "DECLARE_")}
 #{counting_macro_instance(:VOID, :non_vararg, "DECLARE_")}
+#{counting_macro_instance(:VALUE, :non_vararg, "DECLARE_WRAP_")}
+#{counting_macro_instance(:VOID, :non_vararg, "DECLARE_WRAP_")}
 #{counting_macro_instance(:VALUE, :vararg, "DECLARE_")}
 #{counting_macro_instance(:VOID, :vararg, "DECLARE_")}
 
@@ -580,6 +584,8 @@ def output_macro_counting_shortcuts
 
 #{counting_macro_instance(:VALUE, :non_vararg, "DEFINE_")}
 #{counting_macro_instance(:VOID, :non_vararg, "DEFINE_")}
+#{counting_macro_instance(:VALUE, :non_vararg, "DEFINE_WRAP_")}
+#{counting_macro_instance(:VOID, :non_vararg, "DEFINE_WRAP_")}
 #{counting_macro_instance(:VALUE, :vararg, "DEFINE_")}
 #{counting_macro_instance(:VOID, :vararg, "DEFINE_")}
 
