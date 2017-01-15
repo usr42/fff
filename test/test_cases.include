@@ -335,4 +335,3 @@ TEST_F(FFFTestSuite, can_capture_upto_20_arguments_correctly)
     ASSERT_EQ(19, voidfunc20_fake.arg19_val);
 }
 
-

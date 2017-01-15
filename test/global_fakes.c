@@ -17,3 +17,5 @@ DEFINE_FAKE_VALUE_FUNC(int, strlcpy3, char* const, const char* const, const size
 DEFINE_FAKE_VOID_FUNC(voidfunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
 
 DEFINE_WRAP_FAKE_VOID_FUNC(wrapvoidfunc0);
+DEFINE_WRAP_FAKE_VOID_FUNC(wrapvoidfunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
+DEFINE_WRAP_FAKE_VALUE_FUNC(int, wrapvaluefunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);

@@ -35,6 +35,8 @@ DECLARE_FAKE_VALUE_FUNC_VARARG(int, valuefunc3var, const char *, int, ...);
 DECLARE_FAKE_VOID_FUNC(voidfunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
 
 DECLARE_WRAP_FAKE_VOID_FUNC(wrapvoidfunc0);
+DECLARE_WRAP_FAKE_VOID_FUNC(wrapvoidfunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
+DECLARE_WRAP_FAKE_VALUE_FUNC(int, wrapvaluefunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
 
 #ifndef __cplusplus
 int strlcpy3(char* const, const char* const, const size_t);

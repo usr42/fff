@@ -22,6 +22,8 @@ void setup()
     RESET_FAKE(strlcpy3);
 
     RESET_WRAP_FAKE(wrapvoidfunc0);
+    RESET_WRAP_FAKE(wrapvoidfunc20);
+    RESET_WRAP_FAKE(wrapvaluefunc20);
     real_wrapvoidfunc0_called = 0;
     own_wrapvoidfunc0_called = 0;
 
@@ -49,6 +51,8 @@ int main()
     RUN_TEST(FFFWrapTestSuite, when_wrap_func_called_once_and_reset_then_callcount_is_zero);
     RUN_TEST(FFFWrapTestSuite, when_custom_fake_changed_own_custom_fake_called_not_real);
     RUN_TEST(FFFWrapTestSuite, when_custom_fake_set_to_NULL_no_function_called_but_counter_incremented);
+    RUN_TEST(FFFWrapTestSuite, wrap_can_capture_upto_20_arguments_correctly);
+    RUN_TEST(FFFWrapTestSuite, wrap_can_capture_upto_20_arguments_in_value_funct_correctly);
 
     RUN_TEST(FFFTestSuite, when_void_func_never_called_then_callcount_is_zero);
     RUN_TEST(FFFTestSuite, when_void_func_called_once_then_callcount_is_one);
