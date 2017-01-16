@@ -237,6 +237,7 @@ def output_macro(arg_count, has_varargs, is_value_function)
         arg_type_list = (saved_arg_count > 0) ? ", #{arg_type_list(saved_arg_count)}" : ""
         putd "#{declare_macro_name}(#{fff_macro_parameter(saved_arg_count, is_value_function)}); \\"
         putd "void FUNCNAME##_wrap_reset(); \\"
+        putd "#{$WRAP_PREFIX}_##FUNCNAME##_Fake * FUNCNAME##_fake; \\"
       }
     popd
   end
@@ -265,6 +266,7 @@ def output_macro(arg_count, has_varargs, is_value_function)
         putd "#{define_macro_name}(#{fff_macro_parameter(saved_arg_count, is_value_function)}); \\"
         putd "DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \\"
         output_initialize_fake_struct_with_custom_fake("__real_##FUNCNAME", arg_count, is_value_function)
+        putd "#{$WRAP_PREFIX}_##FUNCNAME##_Fake * FUNCNAME##_fake = &#{$WRAP_PREFIX}_##FUNCNAME##_fake; \\"
       }
     popd
   end
@@ -402,6 +404,7 @@ def function_signature(arg_count, has_varargs, is_value_function)
   "#{return_type} FUNCNAME(#{arg_val_list(arg_count)}#{varargs})"
 end
 
+# example: RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE
 def fff_macro_parameter(arg_count, is_value_function)
   return_type = is_value_function ? "RETURN_TYPE, " : ""
   arg_type_list = arg_count > 0 ? ", #{arg_type_list(arg_count)}" : ""
