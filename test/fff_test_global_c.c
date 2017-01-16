@@ -24,6 +24,7 @@ void setup()
     RESET_WRAP_FAKE(wrapvoidfunc0);
     RESET_WRAP_FAKE(wrapvoidfunc20);
     RESET_WRAP_FAKE(wrapvaluefunc20);
+    RESET_WRAP_FAKE(wrapvalue0);
     real_wrapvoidfunc0_called = 0;
     own_wrapvoidfunc0_called = 0;
 
