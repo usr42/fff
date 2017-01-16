@@ -33,6 +33,7 @@ FAKE_VOID_FUNC_VARARG(voidfunc3var, char *, int, ...);
 FAKE_VALUE_FUNC_VARARG(int, valuefunc3var, char *, int, ...);
 FAKE_VALUE_FUNC(int, strlcpy3, char* const, const char* const, const size_t);
 FAKE_VOID_FUNC(voidfunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
+FAKE_VALUE_FUNC(int, valuefunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
 
 WRAP_FAKE_VOID_FUNC(wrapvoidfunc0);
 WRAP_FAKE_VOID_FUNC(wrapvoidfunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
@@ -127,6 +128,7 @@ int main()
     RUN_TEST(FFFTestSuite, use_value_vararg_fake_with_different_number_of_arguments);
 
     RUN_TEST(FFFTestSuite, can_capture_upto_20_arguments_correctly);
+    RUN_TEST(FFFTestSuite, value_func_can_capture_upto_20_arguments_correctly);
 
     printf("\n-------------\n");
     printf("Complete\n");
