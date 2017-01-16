@@ -53,6 +53,7 @@ int main()
     RUN_TEST(FFFWrapTestSuite, when_custom_fake_set_to_NULL_no_function_called_but_counter_incremented);
     RUN_TEST(FFFWrapTestSuite, wrap_can_capture_upto_20_arguments_correctly);
     RUN_TEST(FFFWrapTestSuite, wrap_can_capture_upto_20_arguments_in_value_funct_correctly);
+    RUN_TEST(FFFWrapTestSuite, value_function_without_parameters_works);
 
     RUN_TEST(FFFTestSuite, when_void_func_never_called_then_callcount_is_zero);
     RUN_TEST(FFFTestSuite, when_void_func_called_once_then_callcount_is_one);

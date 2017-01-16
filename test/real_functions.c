@@ -14,3 +14,8 @@ int wrapvaluefunc20(int a, int b, int c, int d, int e, int f, int g, int h, int 
 {
     return a + b + c + d + e + f + g + h + i + j + k + l + m + n + o + p + q + r + s + t;
 }
+
+int wrapvalue0()
+{
+    return 42;
+}

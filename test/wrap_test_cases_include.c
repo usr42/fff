@@ -123,3 +123,9 @@ TEST_F(FFFWrapTestSuite, wrap_can_capture_upto_20_arguments_in_value_funct_corre
     ASSERT_EQ(190, ret);
 }
 
+TEST_F(FFFWrapTestSuite, value_function_without_parameters_works)
+{
+    int ret = wrapvalue0();
+
+    ASSERT_EQ(42, ret);
+}
