@@ -16,6 +16,11 @@ int valuefunc3var(const char *fmt, int argc, ...);
 void voidfunc20(int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
 int valuefunc20(int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
 
+void wrapvoidfunc0();
+void wrapvoidfunc20(int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
+int wrapvaluefunc20(int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
+int wrapvalue0();
+
 enum MYBOOL { FALSE = 899, TRUE };
 struct MyStruct {
     int x;
