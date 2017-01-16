@@ -137,3 +137,14 @@ TEST_F(FFFWrapTestSuite, direct_access_to__wrap_struct_is_possible)
     ASSERT_EQ(1, wrapvoidfunc0_fake->call_count);
     ASSERT_EQ(1, __wrap_wrapvoidfunc0_fake.call_count);
 }
+
+TEST_F(FFFWrapTestSuite, USE_REAL_CUSTOM_FUNCTION_sets_to_real_func_without_reseting_data)
+{
+    wrapvoidfunc0_fake->custom_fake = own_wrapvoidfunc0;
+
+	wrapvoidfunc0();
+	USE_REAL_CUSTOM_FUNCTION(wrapvoidfunc0);
+
+	ASSERT_EQ(__real_wrapvoidfunc0, wrapvoidfunc0_fake->custom_fake);
+	ASSERT_EQ(1, wrapvoidfunc0_fake->call_count);
+}

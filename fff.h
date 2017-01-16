@@ -50,9 +50,15 @@ SOFTWARE.
 } \
 
 
-/* Defining a function to reset a fake function and delegates to __real function */
+/* Defining a function to reset a fake function and delegate to __real function */
 #define RESET_WRAP_FAKE(FUNCNAME) { \
     FUNCNAME##_wrap_reset(); \
+} \
+
+
+/* Defining a function to delegate to __real function */
+#define USE_REAL_CUSTOM_FUNCTION(FUNCNAME) { \
+    FUNCNAME##_use_real_func(); \
 } \
 
 
@@ -118,6 +124,11 @@ SOFTWARE.
         __wrap_##FUNCNAME##_reset();\
         __wrap_##FUNCNAME##_fake.custom_fake = __real_##FUNCNAME ; \
     }
+
+#define DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME) \
+    void FUNCNAME##_use_real_func(){ \
+        __wrap_##FUNCNAME##_fake.custom_fake = __real_##FUNCNAME ; \
+    }
 /* -- END INTERNAL HELPER MACROS -- */
 
 typedef struct { 
@@ -157,6 +168,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME();\
         DECLARE_FAKE_VOID_FUNC0(__wrap_##FUNCNAME); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -188,6 +200,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC0(__wrap_##FUNCNAME); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -219,6 +232,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0);\
         DECLARE_FAKE_VOID_FUNC1(__wrap_##FUNCNAME, ARG0_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -252,6 +266,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC1(__wrap_##FUNCNAME, ARG0_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -284,6 +299,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1);\
         DECLARE_FAKE_VOID_FUNC2(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -319,6 +335,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC2(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -352,6 +369,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2);\
         DECLARE_FAKE_VOID_FUNC3(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -389,6 +407,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC3(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -423,6 +442,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3);\
         DECLARE_FAKE_VOID_FUNC4(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -462,6 +482,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC4(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -497,6 +518,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4);\
         DECLARE_FAKE_VOID_FUNC5(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -538,6 +560,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC5(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -574,6 +597,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5);\
         DECLARE_FAKE_VOID_FUNC6(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -617,6 +641,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC6(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -654,6 +679,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6);\
         DECLARE_FAKE_VOID_FUNC7(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -699,6 +725,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC7(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -737,6 +764,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7);\
         DECLARE_FAKE_VOID_FUNC8(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -784,6 +812,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC8(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -823,6 +852,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8);\
         DECLARE_FAKE_VOID_FUNC9(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -872,6 +902,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC9(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -912,6 +943,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9);\
         DECLARE_FAKE_VOID_FUNC10(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -963,6 +995,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC10(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -1004,6 +1037,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10);\
         DECLARE_FAKE_VOID_FUNC11(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -1057,6 +1091,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC11(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -1099,6 +1134,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11);\
         DECLARE_FAKE_VOID_FUNC12(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -1154,6 +1190,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC12(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -1197,6 +1234,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12);\
         DECLARE_FAKE_VOID_FUNC13(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -1254,6 +1292,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC13(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -1298,6 +1337,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13);\
         DECLARE_FAKE_VOID_FUNC14(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -1357,6 +1397,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC14(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -1402,6 +1443,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13, ARG14_TYPE arg14);\
         DECLARE_FAKE_VOID_FUNC15(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -1463,6 +1505,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC15(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -1509,6 +1552,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13, ARG14_TYPE arg14, ARG15_TYPE arg15);\
         DECLARE_FAKE_VOID_FUNC16(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -1572,6 +1616,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC16(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -1619,6 +1664,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13, ARG14_TYPE arg14, ARG15_TYPE arg15, ARG16_TYPE arg16);\
         DECLARE_FAKE_VOID_FUNC17(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -1684,6 +1730,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC17(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -1732,6 +1779,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13, ARG14_TYPE arg14, ARG15_TYPE arg15, ARG16_TYPE arg16, ARG17_TYPE arg17);\
         DECLARE_FAKE_VOID_FUNC18(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE, ARG17_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -1799,6 +1847,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC18(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE, ARG17_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -1848,6 +1897,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13, ARG14_TYPE arg14, ARG15_TYPE arg15, ARG16_TYPE arg16, ARG17_TYPE arg17, ARG18_TYPE arg18);\
         DECLARE_FAKE_VOID_FUNC19(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE, ARG17_TYPE, ARG18_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -1917,6 +1967,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC19(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE, ARG17_TYPE, ARG18_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -1967,6 +2018,7 @@ FFF_END_EXTERN_C \
         void __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13, ARG14_TYPE arg14, ARG15_TYPE arg15, ARG16_TYPE arg16, ARG17_TYPE arg17, ARG18_TYPE arg18, ARG19_TYPE arg19);\
         DECLARE_FAKE_VOID_FUNC20(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE, ARG17_TYPE, ARG18_TYPE, ARG19_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -2038,6 +2090,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VOID_FUNC20(__wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE, ARG17_TYPE, ARG18_TYPE, ARG19_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -2069,6 +2122,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME();\
         DECLARE_FAKE_VALUE_FUNC0(RETURN_TYPE, __wrap_##FUNCNAME); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -2101,6 +2155,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC0(RETURN_TYPE, __wrap_##FUNCNAME); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -2133,6 +2188,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0);\
         DECLARE_FAKE_VALUE_FUNC1(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -2167,6 +2223,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC1(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -2200,6 +2257,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1);\
         DECLARE_FAKE_VALUE_FUNC2(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -2236,6 +2294,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC2(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -2270,6 +2329,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2);\
         DECLARE_FAKE_VALUE_FUNC3(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -2308,6 +2368,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC3(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -2343,6 +2404,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3);\
         DECLARE_FAKE_VALUE_FUNC4(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -2383,6 +2445,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC4(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -2419,6 +2482,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4);\
         DECLARE_FAKE_VALUE_FUNC5(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -2461,6 +2525,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC5(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -2498,6 +2563,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5);\
         DECLARE_FAKE_VALUE_FUNC6(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -2542,6 +2608,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC6(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -2580,6 +2647,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6);\
         DECLARE_FAKE_VALUE_FUNC7(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -2626,6 +2694,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC7(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -2665,6 +2734,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7);\
         DECLARE_FAKE_VALUE_FUNC8(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -2713,6 +2783,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC8(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -2753,6 +2824,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8);\
         DECLARE_FAKE_VALUE_FUNC9(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -2803,6 +2875,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC9(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -2844,6 +2917,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9);\
         DECLARE_FAKE_VALUE_FUNC10(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -2896,6 +2970,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC10(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -2938,6 +3013,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10);\
         DECLARE_FAKE_VALUE_FUNC11(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -2992,6 +3068,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC11(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -3035,6 +3112,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11);\
         DECLARE_FAKE_VALUE_FUNC12(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -3091,6 +3169,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC12(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -3135,6 +3214,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12);\
         DECLARE_FAKE_VALUE_FUNC13(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -3193,6 +3273,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC13(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -3238,6 +3319,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13);\
         DECLARE_FAKE_VALUE_FUNC14(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -3298,6 +3380,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC14(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -3344,6 +3427,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13, ARG14_TYPE arg14);\
         DECLARE_FAKE_VALUE_FUNC15(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -3406,6 +3490,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC15(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -3453,6 +3538,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13, ARG14_TYPE arg14, ARG15_TYPE arg15);\
         DECLARE_FAKE_VALUE_FUNC16(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -3517,6 +3603,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC16(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -3565,6 +3652,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13, ARG14_TYPE arg14, ARG15_TYPE arg15, ARG16_TYPE arg16);\
         DECLARE_FAKE_VALUE_FUNC17(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -3631,6 +3719,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC17(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -3680,6 +3769,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13, ARG14_TYPE arg14, ARG15_TYPE arg15, ARG16_TYPE arg16, ARG17_TYPE arg17);\
         DECLARE_FAKE_VALUE_FUNC18(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE, ARG17_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -3748,6 +3838,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC18(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE, ARG17_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -3798,6 +3889,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13, ARG14_TYPE arg14, ARG15_TYPE arg15, ARG16_TYPE arg16, ARG17_TYPE arg17, ARG18_TYPE arg18);\
         DECLARE_FAKE_VALUE_FUNC19(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE, ARG17_TYPE, ARG18_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -3868,6 +3960,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC19(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE, ARG17_TYPE, ARG18_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
@@ -3919,6 +4012,7 @@ FFF_END_EXTERN_C \
         RETURN_TYPE __real_##FUNCNAME(ARG0_TYPE arg0, ARG1_TYPE arg1, ARG2_TYPE arg2, ARG3_TYPE arg3, ARG4_TYPE arg4, ARG5_TYPE arg5, ARG6_TYPE arg6, ARG7_TYPE arg7, ARG8_TYPE arg8, ARG9_TYPE arg9, ARG10_TYPE arg10, ARG11_TYPE arg11, ARG12_TYPE arg12, ARG13_TYPE arg13, ARG14_TYPE arg14, ARG15_TYPE arg15, ARG16_TYPE arg16, ARG17_TYPE arg17, ARG18_TYPE arg18, ARG19_TYPE arg19);\
         DECLARE_FAKE_VALUE_FUNC20(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE, ARG17_TYPE, ARG18_TYPE, ARG19_TYPE); \
         void FUNCNAME##_wrap_reset(); \
+        void FUNCNAME##_use_real_func(); \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake; \
     FFF_END_EXTERN_C \
 
@@ -3991,6 +4085,7 @@ FFF_END_EXTERN_C \
     FFF_EXTERN_C \
         DEFINE_FAKE_VALUE_FUNC20(RETURN_TYPE, __wrap_##FUNCNAME, ARG0_TYPE, ARG1_TYPE, ARG2_TYPE, ARG3_TYPE, ARG4_TYPE, ARG5_TYPE, ARG6_TYPE, ARG7_TYPE, ARG8_TYPE, ARG9_TYPE, ARG10_TYPE, ARG11_TYPE, ARG12_TYPE, ARG13_TYPE, ARG14_TYPE, ARG15_TYPE, ARG16_TYPE, ARG17_TYPE, ARG18_TYPE, ARG19_TYPE); \
         DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \
+        DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \
         __wrap_##FUNCNAME##_Fake __wrap_##FUNCNAME##_fake = {0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, {0}, 0, 0, 0, 0, 0, 0, 0, 0, 0, __real_##FUNCNAME, 0}; \
         __wrap_##FUNCNAME##_Fake * FUNCNAME##_fake = &__wrap_##FUNCNAME##_fake; \
     FFF_END_EXTERN_C \

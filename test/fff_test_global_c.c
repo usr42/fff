@@ -56,6 +56,8 @@ int main()
     RUN_TEST(FFFWrapTestSuite, wrap_can_capture_upto_20_arguments_in_value_funct_correctly);
     RUN_TEST(FFFWrapTestSuite, value_function_without_parameters_works);
     RUN_TEST(FFFWrapTestSuite, direct_access_to__wrap_struct_is_possible);
+	RUN_TEST(FFFWrapTestSuite, USE_REAL_CUSTOM_FUNCTION_sets_to_real_func_without_reseting_data);
+
 
     RUN_TEST(FFFTestSuite, when_void_func_never_called_then_callcount_is_zero);
     RUN_TEST(FFFTestSuite, when_void_func_called_once_then_callcount_is_one);

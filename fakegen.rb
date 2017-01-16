@@ -37,6 +37,7 @@ def output_internal_helper_macros
   define_custom_fake_sequence_helper
   define_reset_fake_macro
   define_reset_wrap_fake_macro
+  define_use_real_custom_function_macro
   define_declare_arg_helper
   define_declare_all_func_common_helper
   define_save_arg_helper
@@ -50,6 +51,7 @@ def output_internal_helper_macros
   define_extern_c_helper
   define_reset_fake_helper
   define_reset_wrap_fake_helper
+  define_use_real_custom_function_helper
   
   putd "/* -- END INTERNAL HELPER MACROS -- */"
   putd ""
@@ -67,9 +69,18 @@ def define_custom_fake_sequence_helper
   putd "                            FUNCNAME##_fake.custom_fake_seq_len = ARRAY_LEN;"
 end
 
+def define_use_real_custom_function_macro
+  putd ""
+  putd "/* Defining a function to delegate to __real function */"
+  putd "#define USE_REAL_CUSTOM_FUNCTION(FUNCNAME) { \\"
+  putd "    FUNCNAME##_use_real_func(); \\"
+  putd "} \\"
+  putd ""
+end
+
 def define_reset_wrap_fake_macro
   putd ""
-  putd "/* Defining a function to reset a fake function and delegates to __real function */"
+  putd "/* Defining a function to reset a fake function and delegate to __real function */"
   putd "#define RESET_WRAP_FAKE(FUNCNAME) { \\"
   putd "    FUNCNAME##_wrap_reset(); \\"
   putd "} \\"
@@ -178,6 +189,18 @@ def define_reset_fake_helper
   putd "    }"
 end
 
+def define_use_real_custom_function_helper
+  putd ""
+  putd "#define DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME) \\"
+  pushd
+    putd "void FUNCNAME##_use_real_func(){ \\"
+    pushd
+      putd "#{$WRAP_PREFIX}_##FUNCNAME##_fake.custom_fake = __real_##FUNCNAME ; \\"
+    popd
+    putd "}"
+  popd
+end
+
 def define_reset_wrap_fake_helper
   putd ""
   putd "#define DEFINE_RESET_WRAP_FUNCTION(FUNCNAME) \\"
@@ -237,6 +260,7 @@ def output_macro(arg_count, has_varargs, is_value_function)
         arg_type_list = (saved_arg_count > 0) ? ", #{arg_type_list(saved_arg_count)}" : ""
         putd "#{declare_macro_name}(#{fff_macro_parameter(saved_arg_count, is_value_function)}); \\"
         putd "void FUNCNAME##_wrap_reset(); \\"
+        putd "void FUNCNAME##_use_real_func(); \\"
         putd "#{$WRAP_PREFIX}_##FUNCNAME##_Fake * FUNCNAME##_fake; \\"
       }
     popd
@@ -265,6 +289,7 @@ def output_macro(arg_count, has_varargs, is_value_function)
         arg_type_list = (saved_arg_count > 0) ? ", #{arg_type_list(saved_arg_count)}" : ""
         putd "#{define_macro_name}(#{fff_macro_parameter(saved_arg_count, is_value_function)}); \\"
         putd "DEFINE_RESET_WRAP_FUNCTION(FUNCNAME); \\"
+        putd "DEFINE_USE_REAL_CUSTOM_FUNCTION(FUNCNAME); \\"
         output_initialize_fake_struct_with_custom_fake("__real_##FUNCNAME", arg_count, is_value_function)
         putd "#{$WRAP_PREFIX}_##FUNCNAME##_Fake * FUNCNAME##_fake = &#{$WRAP_PREFIX}_##FUNCNAME##_fake; \\"
       }
