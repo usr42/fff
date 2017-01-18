@@ -476,6 +476,33 @@ DEFINE_FAKE_VOID_FUNC_VARARG(void_function_vargs, const char *, int, ...);
 
 ```
 
+## Generate fakes to use with gcc's --wrap option
+
+### Benefits
+
+* Uses real function by default, so no need to change or adapt other tests if you use a fake for a function
+* you could still spy on the fakes, e.g. use the real implementation but still check how often the function gets called and with which parameters
+
+### Usage
+
+* equivalent as for "normal" fakes
+* use ```WRAP_FAKE_VOID_FUNC(wrapvoidfunc1, int);``` or ```WRAP_FAKE_VALUE_FUNC(int, wrapvaluefunc2, int, char *);```
+* DECLARE_WRAP_FAKE_VOID_FUNC and DEFINE_WRAP_FAKE_VOID_FUNC
+* use makro ```RESET_WRAP_FAKE(wrapvoidfunc1)``` to reset fakes and delegate to the real function again (should be done in setup or teardown function)
+* use pointer to fake struct
+* change custom_fake
+* don't use custom fake
+* reset only custom_fake
+* USE_REAL_CUSTOM_FUNCTION
+* how is --wrap used with gcc
+** Makefile example
+** for examples see tests in test/wrap_test_cases_include.c ()
+
+### Known issues
+
+* not working with C++
+* not working with varargs
+
 ## Find out more...
 
 Look under the examlples directory for full length examples in both C and C++.
