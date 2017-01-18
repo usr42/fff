@@ -1,3 +1,5 @@
+#define RETURN_VALUE 42
+
 int own_wrapvoidfunc0_called = 0;
 
 void own_wrapvoidfunc0()
@@ -17,6 +19,13 @@ TEST_F(FFFWrapTestSuite, by_default_real_function_is_called)
     ASSERT_EQ(1, real_wrapvoidfunc0_called);
 }
 
+TEST_F(FFFWrapTestSuite, when_wrap_func_called_once_then_callcount_is_one)
+{
+    wrapvoidfunc0();
+
+    ASSERT_EQ(1, wrapvoidfunc0_fake->call_count);
+}
+
 TEST_F(FFFWrapTestSuite, real_function_is_not_called_if_custom_fake_is_set_to_null)
 {
     wrapvoidfunc0_fake->custom_fake = NULL;
@@ -33,13 +42,6 @@ TEST_F(FFFWrapTestSuite, custom_fake_is_real_function_after_RESET_WRAP_FAKE_call
     RESET_WRAP_FAKE(wrapvoidfunc0);
 
     ASSERT_EQ(__real_wrapvoidfunc0, wrapvoidfunc0_fake->custom_fake);
-}
-
-TEST_F(FFFWrapTestSuite, when_wrap_func_called_once_then_callcount_is_one)
-{
-    wrapvoidfunc0();
-
-    ASSERT_EQ(1, wrapvoidfunc0_fake->call_count);
 }
 
 TEST_F(FFFWrapTestSuite, when_wrap_func_called_once_and_reset_then_callcount_is_zero)
@@ -98,7 +100,11 @@ TEST_F(FFFWrapTestSuite, wrap_can_capture_upto_20_arguments_correctly)
 
 TEST_F(FFFWrapTestSuite, wrap_can_capture_upto_20_arguments_in_value_funct_correctly)
 {
+    wrapvaluefunc20_return_value = RETURN_VALUE;
+
     int ret = wrapvaluefunc20(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19);
+
+    ASSERT_EQ(RETURN_VALUE, ret);
     ASSERT_EQ(0, wrapvaluefunc20_fake->arg0_val);
     ASSERT_EQ(1, wrapvaluefunc20_fake->arg1_val);
     ASSERT_EQ(2, wrapvaluefunc20_fake->arg2_val);
@@ -119,15 +125,15 @@ TEST_F(FFFWrapTestSuite, wrap_can_capture_upto_20_arguments_in_value_funct_corre
     ASSERT_EQ(17, wrapvaluefunc20_fake->arg17_val);
     ASSERT_EQ(18, wrapvaluefunc20_fake->arg18_val);
     ASSERT_EQ(19, wrapvaluefunc20_fake->arg19_val);
-
-    ASSERT_EQ(190, ret);
 }
 
 TEST_F(FFFWrapTestSuite, value_function_without_parameters_works)
 {
+    wrapvalue0_return_value = RETURN_VALUE;
+
     int ret = wrapvalue0();
 
-    ASSERT_EQ(42, ret);
+    ASSERT_EQ(RETURN_VALUE, ret);
 }
 
 TEST_F(FFFWrapTestSuite, direct_access_to__wrap_struct_is_possible)
