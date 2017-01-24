@@ -495,8 +495,8 @@ DEFINE_FAKE_VOID_FUNC_VARARG(void_function_vargs, const char *, int, ...);
 * reset only custom_fake
 * USE_REAL_CUSTOM_FUNCTION
 * how is --wrap used with gcc
-** Makefile example
-** for examples see tests in test/wrap_test_cases_include.c ()
+    * Makefile example
+    * for examples see tests in test/wrap_test_cases_include.c ()
 
 ### Known issues
 
