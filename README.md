@@ -485,18 +485,58 @@ DEFINE_FAKE_VOID_FUNC_VARARG(void_function_vargs, const char *, int, ...);
 
 ### Usage
 
-* equivalent as for "normal" fakes
-* use ```WRAP_FAKE_VOID_FUNC(wrapvoidfunc1, int);``` or ```WRAP_FAKE_VALUE_FUNC(int, wrapvaluefunc2, int, char *);```
-* DECLARE_WRAP_FAKE_VOID_FUNC and DEFINE_WRAP_FAKE_VOID_FUNC
-* use makro ```RESET_WRAP_FAKE(wrapvoidfunc1)``` to reset fakes and delegate to the real function again (should be done in setup or teardown function)
-* use pointer to fake struct
-* change custom_fake
-* don't use custom fake
-* reset only custom_fake
-* USE_REAL_CUSTOM_FUNCTION
-* how is --wrap used with gcc
-    * Makefile example
-    * for examples see tests in test/wrap_test_cases_include.c ()
+* equivalent as "normal" fakes
+* use `WRAP_FAKE_VOID_FUNC(wrapvoidfunc1, int);` or `WRAP_FAKE_VALUE_FUNC(int, wrapvaluefunc2, int, char *);`
+* also the seperation of declaration and definition is possible: `DECLARE_WRAP_FAKE_VOID_FUNC` and `DEFINE_WRAP_FAKE_VOID_FUNC`
+* to reset a wrap fake and delegate to the real function again you use the makro `RESET_WRAP_FAKE`, e.g.: ```RESET_WRAP_FAKE(wrapvoidfunc1)```. This can be used in setup or teardown functions.
+* accessing the fake struct is a bit different, than with normal fff fakes. The struct is reachable by a pointer, not directly:
+```
+WRAP_FAKE_VOID_FUNC(wrapvoidfunc0);
+
+wrapvoidfunc0();
+
+ASSERT_EQ(1, wrapvoidfunc0_fake->call_count);
+```
+* the delegation to the real function is realized with the custom_fake. If you don't want to use the real function you can change the custom_fake to your own custom fake or set it to NULL to not use a custom fake at all
+* to only reset custom_fake to the real function again, but keep all the data in the *_fake struct, you can use the `USE_REAL_CUSTOM_FUNCTION` makro
+```
+void my_own_voidfunc0()
+{
+  printf("my_own_voidfunc0() called\n");
+}
+
+WRAP_FAKE_VOID_FUNC(wrapvoidfunc0);
+
+DEFINE_FFF_GLOBALS;
+
+TEST_F(WrapFFFTest, change_custom_fake)
+{
+  // real wrapvoidfunc0 function is called
+  wrapvoidfunc0();
+
+  wrapvoidfunc0_fake->custom_fake = my_own_voidfunc0;
+  // my_own_voidfunc0 function is called
+  wrapvoidfunc0();
+
+  wrapvoidfunc0_fake->custom_fake = NULL;
+  // no custom_fake function is called
+  wrapvoidfunc0();
+
+  USE_REAL_CUSTOM_FUNCTION(wrapvoidfunc0);
+  // real wrapvoidfunc0 function is called
+  wrapvoidfunc0();
+
+  ASSERT_EQ(4, wrapvoidfunc0_fake->call_count);
+
+  return 0;
+}
+```
+* to use WRAP_FAKEs you have to use the gcc `--wrap` parameter. E.g. for the example above you could call:
+```
+gcc -o wraptest wraptest.c wraptest_real.c -Wl,--wrap=wrapvoidfunc0
+```
+* to see a possible automatic matching of functions to wrap, see `WRAP_LDFLAGS` in test/Makefile
+* for more examples see tests in test/wrap_test_cases_include.c
 
 ### Known issues
 
