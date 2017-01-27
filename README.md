@@ -544,6 +544,7 @@ gcc -o wraptest wraptest.c wraptest_real.c -Wl,--wrap=wrapvoidfunc0
 ### Known issues
 
 * not working with C++
+* not working on OSX (--wrap option is missing)
 * not working with varargs
 
 ## Find out more...

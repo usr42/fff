@@ -29,6 +29,13 @@ FFF_TEST_GLOBAL_CPP_TARGET = $(BUILD_DIR)/fff_test_glob_cpp
 
 WRAP_LDFLAGS += $(shell grep -r WRAP_FAKE_VALUE_FUNC ./ | grep -v "fff\.h" | grep -v "Makefile" | sed -n 's/^[^,]*,[^-a-zA-Z_0-9]*\([-a-zA-Z_0-9]*\).*/-Wl,--wrap=\1/p' | sort -u)
 WRAP_LDFLAGS += $(shell grep -r WRAP_FAKE_VOID_FUNC ./ | grep -v "fff\.h"| grep -v "Makefile" | sed -n 's/.*WRAP_FAKE_VOID_FUNC[-a-zA-Z_0-9]*[^-a-zA-Z_0-9]*\([-a-zA-Z_0-9]*\).*/-Wl,--wrap=\1/p' | sort -u)
+
+# don't use --wrap on OSX
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+	WRAP_LDFLAGS = ""
+endif
+
 LIBS := -lpthread
 # All Target
 all: $(FFF_TEST_CPP_TARGET) $(FFF_TEST_C_TARGET) $(FFF_TEST_GLOBAL_C_TARGET) $(FFF_TEST_GLOBAL_CPP_TARGET)

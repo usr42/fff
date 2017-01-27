@@ -41,12 +41,14 @@ FAKE_VALUE_FUNC(int, strlcpy3, char* const, const char* const, const size_t);
 FAKE_VOID_FUNC(voidfunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
 FAKE_VALUE_FUNC(int, valuefunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
 
+#ifndef __APPLE__
 WRAP_FAKE_VOID_FUNC(wrapvoidfunc0);
 WRAP_FAKE_VOID_FUNC(wrapvoidfunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
 WRAP_FAKE_VALUE_FUNC(int, wrapvaluefunc20, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int);
 WRAP_FAKE_VALUE_FUNC(int, wrapvalue0);
 
 #include "wrap_test_cases_include.c"
+#endif /* __APPLE__ */
 
 void setup()
 {
@@ -60,12 +62,14 @@ void setup()
     RESET_FAKE(valuefunc3var);
     RESET_FAKE(strlcpy3);
 
+#ifndef __APPLE__
     RESET_WRAP_FAKE(wrapvoidfunc0);
     RESET_WRAP_FAKE(wrapvoidfunc20);
     RESET_WRAP_FAKE(wrapvaluefunc20);
     RESET_WRAP_FAKE(wrapvalue0);
     real_wrapvoidfunc0_called = 0;
     own_wrapvoidfunc0_called = 0;
+#endif /* __APPLE__ */
 
     FFF_RESET_HISTORY();
 }
@@ -90,6 +94,7 @@ int main()
     fflush(0);
 
     /* Run tests */
+#ifndef __APPLE__
     RUN_TEST(FFFWrapTestSuite, custom_fake_is_set_to_real_function);
     RUN_TEST(FFFWrapTestSuite, by_default_real_function_is_called);
     RUN_TEST(FFFWrapTestSuite, real_function_is_not_called_if_custom_fake_is_set_to_null);
@@ -102,7 +107,8 @@ int main()
     RUN_TEST(FFFWrapTestSuite, wrap_can_capture_upto_20_arguments_in_value_funct_correctly);
     RUN_TEST(FFFWrapTestSuite, value_function_without_parameters_works);
     RUN_TEST(FFFWrapTestSuite, direct_access_to__wrap_struct_is_possible);
-	RUN_TEST(FFFWrapTestSuite, USE_REAL_CUSTOM_FUNCTION_sets_to_real_func_without_reseting_data);
+    RUN_TEST(FFFWrapTestSuite, USE_REAL_CUSTOM_FUNCTION_sets_to_real_func_without_reseting_data);
+#endif /* __APPLE__ */
 
 
     RUN_TEST(FFFTestSuite, when_void_func_never_called_then_callcount_is_zero);
