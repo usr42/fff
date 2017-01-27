@@ -493,9 +493,12 @@ DEFINE_FAKE_VOID_FUNC_VARARG(void_function_vargs, const char *, int, ...);
 ```
 WRAP_FAKE_VOID_FUNC(wrapvoidfunc0);
 
-wrapvoidfunc0();
+TEST_F(WrapFFFTest, calling_void_function_increases_call_count)
+{
+  wrapvoidfunc0();
 
-ASSERT_EQ(1, wrapvoidfunc0_fake->call_count);
+  ASSERT_EQ(1, wrapvoidfunc0_fake->call_count);
+}
 ```
 * the delegation to the real function is realized with the custom_fake. If you don't want to use the real function you can change the custom_fake to your own custom fake or set it to NULL to not use a custom fake at all
 * to only reset custom_fake to the real function again, but keep all the data in the *_fake struct, you can use the `USE_REAL_CUSTOM_FUNCTION` makro
